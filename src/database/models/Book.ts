@@ -1,48 +1,49 @@
 import mongoose, { Schema, Document } from "mongoose";
+import Author from "./Author"; // para la relación
 
 export interface IBook extends Document {
-  idBook: number;
+  idBook: string; // único
   title: string;
-  authorId: number; 
-  category?: string;
-  publishedYear?: number;
+  authorId: number; // referencia con Author
+  category: string;
+  publishedYear: number;
   availableCopies: number;
-  img?: string;
+  img: string;
   createdAt: Date;
 }
 
-const urlRegex = /^https?:\/\/.+\..+/i;
+// Validar URL (para img)
+const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
 
-const BookSchema: Schema = new Schema({
-  idBook: { type: Number, required: true, unique: true },
+const BookSchema: Schema<IBook> = new Schema({
+  idBook: { type: String, required: true, unique: true },
   title: { type: String, required: true },
-  authorId: { type: Number, required: true, ref: "Author" },
-  category: { type: String },
-  publishedYear: { type: Number },
-  availableCopies: { type: Number, default: 1 },
+  authorId: { type: Number, required: true, ref: "Author" }, // relación
+  category: { type: String, required: true },
+  publishedYear: { type: Number, required: true },
+  availableCopies: { type: Number, required: true },
   img: {
     type: String,
+    required: true,
     validate: {
-      validator: function (v: string) {
-        if (!v) return true; // opcional
-        return urlRegex.test(v);
-      },
-      message: "img debe ser una URL válida",
+      validator: (value: string) => urlRegex.test(value),
+      message: "La URL de la imagen no es válida",
     },
   },
   createdAt: { type: Date, default: Date.now },
 });
 
-
+// --- 🔗 Virtual populate ---
+// Permite acceder directamente a los datos del autor desde un libro
 BookSchema.virtual("author", {
   ref: "Author",
-  localField: "authorId",
-  foreignField: "authorId",
-  justOne: true,
+  localField: "authorId",   // campo en Book
+  foreignField: "authorId", // campo en Author
+  justOne: true,            // un solo autor por libro
 });
 
+// Para que el virtual se incluya al convertir a JSON u objeto
 BookSchema.set("toObject", { virtuals: true });
 BookSchema.set("toJSON", { virtuals: true });
 
 export default mongoose.models.Book || mongoose.model<IBook>("Book", BookSchema);
-
