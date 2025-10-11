@@ -13,20 +13,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
-    return res.status(405).json({ ok: false, message: `Método ${req.method} no permitido` });
+    return res.status(405).json({ ok: false, message: `Method ${req.method} not allowed` });
   }
 
   try {
     const { username, password }: LoginRequest = req.body;
 
     if (!username || !password) {
-      return res.status(400).json({ ok: false, message: "Usuario y contraseña requeridos" });
+      return res.status(400).json({ ok: false, message: "Username and password are required" });
     }
 
     const user = await User.findOne({ username });
 
     if (!user || user.password !== password) {
-      return res.status(401).json({ ok: false, message: "Usuario o contraseña incorrectos" });
+      return res.status(401).json({ ok: false, message: "Invalid username or password" });
     }
 
     // Login correcto, retornamos info básica (sin la contraseña)
@@ -36,6 +36,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ ok: false, message: "Error al iniciar sesión" });
+    return res.status(500).json({ ok: false, message: "Login error. Please try again later." });
   }
 }

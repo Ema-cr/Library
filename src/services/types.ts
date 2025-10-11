@@ -18,6 +18,7 @@ export interface IAuthor {
 
 // ------------------- Books -------------------
 export interface IBook {
+  _id: string;
   idBook: string;
   title: string;
   authorId: number;

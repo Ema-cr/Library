@@ -11,7 +11,9 @@ interface FormAuthorProps {
 
 const FormAuthor: React.FC<FormAuthorProps> = ({ authorToEdit, onSaved }) => {
   const [name, setName] = useState(authorToEdit?.name || "");
-  const [nationality, setNationality] = useState(authorToEdit?.nationality || "");
+  const [nationality, setNationality] = useState(
+    authorToEdit?.nationality || ""
+  );
   const [birthYear, setBirthYear] = useState<number | "">(
     authorToEdit?.birthYear || ""
   );
@@ -31,7 +33,12 @@ const FormAuthor: React.FC<FormAuthorProps> = ({ authorToEdit, onSaved }) => {
         });
         showSuccess("Autor actualizado correctamente");
       } else {
-        await postAuthor({ name, nationality, birthYear: Number(birthYear), isActive: true });
+        await postAuthor({
+          name,
+          nationality,
+          birthYear: Number(birthYear),
+          isActive: true,
+        });
         showSuccess("Autor creado correctamente");
         setName("");
         setNationality("");
@@ -46,52 +53,66 @@ const FormAuthor: React.FC<FormAuthorProps> = ({ authorToEdit, onSaved }) => {
   };
 
   return (
- <form onSubmit={handleSubmit} className="border rounded-lg p-6 mb-6 flex flex-col gap-4 w-full max-w-md bg-white shadow-md">
-
-      <h2 className="font-bold text-lg text-gray-800">
-        {authorToEdit ? "Editar Autor" : "Crear Autor"}
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white/80 border border-[#D3C3A3] rounded-xl shadow-md p-6 mb-8 flex flex-col gap-4"
+    >
+      <h2 className="font-bold text-lg text-[#5C4033]">
+        {authorToEdit ? "Edit Author" : "Add Author"}
       </h2>
 
       {/* Nombre */}
       <div className="flex flex-col">
-        <label className="text-sm font-medium text-gray-900 mb-1">Name</label>
+        <label className="text-sm font-medium text-[#5C4033] mb-1">Name</label>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Stephen King"
-          className="border border-gray-300 rounded-md p-2 text-sm text-gray-700 placeholder-gray-500 bg-gray-50
-                     focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 hover:border-gray-400 transition"
+          className="border border-[#CBB89D] rounded-md p-2 text-sm 
+  placeholder-[#A67C52] text-[#5C4033]
+  focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] transition"
         />
       </div>
 
       {/* Nacionalidad */}
       <div className="flex flex-col">
-        <label className="text-sm font-medium text-gray-900 mb-1">Nationality</label>
+        <label className="text-sm font-medium text-[#5C4033] mb-1">
+          Nationality
+        </label>
         <input
           type="text"
           value={nationality}
           onChange={(e) => setNationality(e.target.value)}
           placeholder="American"
-          className="border border-gray-300 rounded-md p-2 text-sm text-gray-700 placeholder-gray-500 bg-gray-50
-                     focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 hover:border-gray-400 transition"
+          className="border border-[#CBB89D] rounded-md p-2 text-sm 
+  placeholder-[#A67C52] text-[#5C4033]
+  focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] transition"
         />
       </div>
 
       {/* Año de nacimiento */}
       <div className="flex flex-col">
-        <label className="text-sm font-medium text-gray-900 mb-1">Birth Year</label>
+        <label className="text-sm font-medium text-[#5C4033] mb-1">
+          Birth Year
+        </label>
         <input
           type="number"
           value={birthYear}
-          onChange={(e) => setBirthYear(e.target.value ? Number(e.target.value) : "")}
+          onChange={(e) =>
+            setBirthYear(e.target.value ? Number(e.target.value) : "")
+          }
           placeholder="1947"
-          className="border border-gray-300 rounded-md p-2 text-sm text-gray-700 placeholder-gray-500 bg-gray-50
-                     focus:outline-none focus:ring-1 focus:ring-blue-400 focus:border-blue-400 hover:border-gray-400 appearance-none transition"
+          className="border border-[#CBB89D] rounded-md p-2 text-sm 
+  placeholder-[#A67C52] text-[#5C4033]
+  focus:outline-none focus:ring-2 focus:ring-[#8B5E3C] transition"
         />
       </div>
 
-      <Button type="submit" variant="primary" disabled={loading}>
+      <Button
+        type="submit"
+        className="bg-[#8B5E3C] hover:bg-[#A67C52] text-white rounded-md py-2 shadow-md transition"
+      >
         {loading ? "Saving..." : "Save"}
       </Button>
     </form>

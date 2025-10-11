@@ -36,9 +36,9 @@ export const updateBook = async (book: Partial<IBook> & { idBook: string }): Pro
   }
 };
 
-export const deleteBook = async (idBook: string): Promise<void> => {
+export const deleteBook = async (_id: string): Promise<void> => {
   try {
-    await axios.delete(BASE_URL, { params: { idBook } });
+    await axios.delete(BASE_URL, { params: { _id } });
   } catch (err) {
     const error = err as AxiosError<{ message: string }>;
     console.error("Error deleteBook:", error.response?.data?.message || error.message);
